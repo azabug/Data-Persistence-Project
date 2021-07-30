@@ -9,6 +9,7 @@ public class BrickManager : MonoBehaviour
     public Brick BrickPrefab;
     public int LineCount = 6;
     public Text ScoreText;
+    public GameObject PlayerPrompt;
     private int m_Points;
 
     // Start is called before the first frame update
@@ -46,5 +47,13 @@ public class BrickManager : MonoBehaviour
         m_Points += point;
         Manager.UpdatePoints(m_Points);
         ScoreText.text = $"Score : {m_Points}";
+    }
+    public void ShowPrompt()
+    {
+        PlayerPrompt.SetActive(true);
+    }
+    public void HidePrompt()
+    {
+        PlayerPrompt.SetActive(false);
     }
 }

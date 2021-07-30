@@ -622,6 +622,7 @@ MonoBehaviour:
   BrickPrefab: {fileID: 897975713663390409, guid: 63f25b9733d2bcd4fa2ff6de1264c739, type: 3}
   LineCount: 6
   ScoreText: {fileID: 188020406}
+  PlayerPrompt: {fileID: 474497238}
 --- !u!4 &242453071
 Transform:
   m_ObjectHideFlags: 0
@@ -724,9 +725,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   throwForce: 2
+  highScorePlayerName: 
+  highScorePlayerScore: 0
+  highscore: {fileID: 0}
   player: 
   playerName: {fileID: 0}
+  start: {fileID: 0}
   m_Points: 0
+  m_Scene: 0
 --- !u!1 &455529321
 GameObject:
   m_ObjectHideFlags: 0
@@ -805,12 +811,12 @@ GameObject:
   - component: {fileID: 474497241}
   - component: {fileID: 474497240}
   m_Layer: 5
-  m_Name: GameoverText
+  m_Name: PromptText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &474497239
 RectTransform:
   m_ObjectHideFlags: 0
@@ -863,9 +869,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'GAME OVER
+  m_Text: 'Press Space to Start.
 
-    Press Space to Restart'
+    Use arrow keys or "A" and "D" to navigate.'
 --- !u!222 &474497241
 CanvasRenderer:
   m_ObjectHideFlags: 0
