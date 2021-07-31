@@ -13,11 +13,12 @@ public class MainManager : MonoBehaviour
     private ThrowBall ballThrow;
     private BrickManager brickMan;
     public float throwForce = 2.0f;
-    public string highScorePlayerName;
-    public int highScorePlayerScore;
+    public string highScorePlayers;
     public TextMeshProUGUI highscore;
     public string player;
     public TextMeshProUGUI playerName;
+    public string[] playerList;
+    public int[] playerPointsList;
     public Button start;
     private bool m_Started = false;
     public int m_Points;   
@@ -50,18 +51,13 @@ public class MainManager : MonoBehaviour
             m_Started = false;
             ballThrow = GameObject.Find("ThrowBall").GetComponent<ThrowBall>();
             brickMan = GameObject.Find("BrickManager").GetComponent<BrickManager>();
-            //playerName = GameObject.Find("BestScore").GetComponent<TextMeshProUGUI>();
-            //gameOverText = GameObject.Find("GameoverText");
             m_Scene = 1;
         }
         if(level == 2)
         {
             highscore = GameObject.Find("hscore").GetComponent<TextMeshProUGUI>();
             m_Scene = 2;
-            if(highScorePlayerScore < m_Points)
-            {
-                SaveHighScore();
-            }
+            CompileScores();
             LoadHighScore();
         }
     }
@@ -82,14 +78,121 @@ public class MainManager : MonoBehaviour
     [System.Serializable]
     class SaveData
     {
-        public string player;
-        public int m_Points;
+        public string playerOne;
+        public string playerTwo;
+        public string playerThree;
+        public string playerFour;
+        public string playerFive;
+
+        public int m_pointsOne;
+        public int m_pointsTwo;
+        public int m_pointsThree;
+        public int m_pointsFour;
+        public int m_pointsFive;
+    }
+    public void CompileScores()
+    {
+        int[] pointsList = {0, 0, 0, 0, 0};
+        string[] playList = {"", "", "", "", ""};
+        bool isHighScore = false;
+
+        if (playerPointsList[0] < m_Points)
+        {
+            pointsList[0] = m_Points;
+            pointsList[1] = playerPointsList[0];
+            pointsList[2] = playerPointsList[1];
+            pointsList[3] = playerPointsList[2];
+            pointsList[4] = playerPointsList[3];
+            playList[0] = player;
+            playList[1] = playerList[0];
+            playList[2] = playerList[1];
+            playList[3] = playerList[2];
+            playList[4] = playerList[3];
+            isHighScore = true;
+        }
+        else if (playerPointsList[0] > m_Points && playerPointsList[1] < m_Points)
+        {
+            pointsList[0] = playerPointsList[0];
+            pointsList[1] = m_Points;
+            pointsList[2] = playerPointsList[1];
+            pointsList[3] = playerPointsList[2];
+            pointsList[4] = playerPointsList[3];
+            playList[0] = playerList[0];
+            playList[1] = player;
+            playList[2] = playerList[1];
+            playList[3] = playerList[2];
+            playList[4] = playerList[3];
+            isHighScore = true;
+        }
+        else if (playerPointsList[1] > m_Points && playerPointsList[2] < m_Points)
+        {
+            pointsList[0] = playerPointsList[0];
+            pointsList[1] = playerPointsList[1];
+            pointsList[2] = m_Points;
+            pointsList[3] = playerPointsList[2];
+            pointsList[4] = playerPointsList[3];
+            playList[0] = playerList[0];
+            playList[1] = playerList[1];
+            playList[2] = player;
+            playList[3] = playerList[2];
+            playList[4] = playerList[3];
+            isHighScore = true;
+        }
+        else if (playerPointsList[2] > m_Points && playerPointsList[3] < m_Points)
+        {
+            pointsList[0] = playerPointsList[0];
+            pointsList[1] = playerPointsList[1];
+            pointsList[2] = playerPointsList[2];
+            pointsList[3] = m_Points;
+            pointsList[4] = playerPointsList[3];
+            playList[0] = playerList[0];
+            playList[1] = playerList[1];
+            playList[2] = playerList[2];
+            playList[3] = player;
+            playList[4] = playerList[3];
+            isHighScore = true;
+        }
+        else if (playerPointsList[3] > m_Points && playerPointsList[4] < m_Points)
+        {
+            pointsList[0] = playerPointsList[0];
+            pointsList[1] = playerPointsList[1];
+            pointsList[2] = playerPointsList[2];
+            pointsList[3] = playerPointsList[3];
+            pointsList[4] = m_Points;
+            playList[0] = playerList[0];
+            playList[1] = playerList[1];
+            playList[2] = playerList[2];
+            playList[3] = playerList[3];
+            playList[4] = player;
+            isHighScore = true;
+        }
+        else
+        {
+            isHighScore = false;
+        }
+        if(isHighScore)
+        {
+            playerList = playList;
+            playerPointsList = pointsList;
+            SaveHighScore();
+        }
+        
     }
     public void SaveHighScore()
     {
         SaveData data = new SaveData();
-        data.player = player;
-        data.m_Points = m_Points;
+        
+        data.playerOne = playerList[0];
+        data.playerTwo = playerList[1];
+        data.playerThree = playerList[2];
+        data.playerFour = playerList[3];
+        data.playerFive = playerList[4];
+
+        data.m_pointsOne = playerPointsList[0];
+        data.m_pointsTwo = playerPointsList[1];
+        data.m_pointsThree = playerPointsList[2];
+        data.m_pointsFour = playerPointsList[3];
+        data.m_pointsFive = playerPointsList[4];
 
         string json = JsonUtility.ToJson(data);
         File.WriteAllText(Application.persistentDataPath + "/savedfile.json", json);
@@ -101,13 +204,23 @@ public class MainManager : MonoBehaviour
         {
             string json = File.ReadAllText(path);
             SaveData data = JsonUtility.FromJson<SaveData>(json);
+            playerList[0] = data.playerOne;
+            playerList[1] = data.playerTwo;
+            playerList[2] = data.playerThree;
+            playerList[3] = data.playerFour;
+            playerList[4] = data.playerFive;
+            playerPointsList[0] = data.m_pointsOne;
+            playerPointsList[1] = data.m_pointsTwo;
+            playerPointsList[2] = data.m_pointsThree;
+            playerPointsList[3] = data.m_pointsFour;
+            playerPointsList[4] = data.m_pointsFive;
 
-            highScorePlayerName = data.player;
-            highScorePlayerScore = data.m_Points;
-            highscore.SetText(highScorePlayerName+" : "+highScorePlayerScore);
+            highScorePlayers = playerList[0] + " : " + playerPointsList[0] + "\n" + playerList[1] + " : " + playerPointsList[1] + "\n" + playerList[2] + " : " + playerPointsList[2] + "\n" + playerList[3] + " : " + playerPointsList[3] + "\n" + playerList[4] + " : " + playerPointsList[4] + "\n";
+            highscore.SetText(highScorePlayers);
         }
         else
         {
+
             highscore.SetText("No high score yet.");
         }
     }
