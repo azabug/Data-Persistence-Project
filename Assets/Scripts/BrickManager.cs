@@ -9,6 +9,7 @@ public class BrickManager : MonoBehaviour
     public Brick BrickPrefab;
     public int LineCount = 6;
     public Text ScoreText;
+    public Text LevelText;
     public GameObject PlayerPrompt;
     private int m_Points;
 
@@ -16,6 +17,8 @@ public class BrickManager : MonoBehaviour
     void Start()
     {
         Manager = GameObject.Find("MainManager").GetComponent<MainManager>();
+        ScoreText.text = $"Score : {Manager.m_Points}";
+        LevelText.text = $"Level : {Manager.gameLevel}";
         SetUpBricks();
     }
 
@@ -44,9 +47,11 @@ public class BrickManager : MonoBehaviour
     }
     void AddPoint(int point)
     {
+        m_Points = Manager.m_Points;
         m_Points += point;
         Manager.UpdatePoints(m_Points);
-        ScoreText.text = $"Score : {m_Points}";
+        ScoreText.text = $"Score : {Manager.m_Points}";
+        LevelText.text = $"Level : {Manager.gameLevel}";
     }
     public void ShowPrompt()
     {

@@ -12,6 +12,9 @@ public class MainManager : MonoBehaviour
 
     private ThrowBall ballThrow;
     private BrickManager brickMan;
+    public GameObject settingsPanel;
+    public int hits = 0;
+    public int gameLevel = 1;
     public float throwForce = 2.0f;
     public string highScorePlayers;
     public TextMeshProUGUI highscore;
@@ -44,6 +47,8 @@ public class MainManager : MonoBehaviour
             start = GameObject.Find("startGameButton").GetComponent<Button>();
             start.onClick.AddListener(SetPlayerName);
             m_Scene = 0;
+            m_Points = 0;
+            gameLevel = 1;
             LoadHighScore();
         }
         if(level == 1)
@@ -51,6 +56,8 @@ public class MainManager : MonoBehaviour
             m_Started = false;
             ballThrow = GameObject.Find("ThrowBall").GetComponent<ThrowBall>();
             brickMan = GameObject.Find("BrickManager").GetComponent<BrickManager>();
+            highscore = GameObject.Find("BestScore").GetComponent<TextMeshProUGUI>();
+            highscore.SetText("High Score - "+playerList[0]+" : "+playerPointsList[0]);
             m_Scene = 1;
         }
         if(level == 2)
@@ -72,6 +79,20 @@ public class MainManager : MonoBehaviour
                 ballThrow.StartBall(throwForce);
                 brickMan.HidePrompt();
             }
+        }
+    }
+    public void CheckHighestScore()
+    {
+        hits += 1;
+        if (m_Points > playerPointsList[0])
+        {
+            highscore.SetText("High Score - "+player+" : "+m_Points);
+        }
+        if (hits == 36)
+        {
+            hits = 0;
+            gameLevel += 1;
+            SceneManager.LoadScene(1);
         }
     }
     
@@ -110,7 +131,7 @@ public class MainManager : MonoBehaviour
             playList[4] = playerList[3];
             isHighScore = true;
         }
-        else if (playerPointsList[0] > m_Points && playerPointsList[1] < m_Points)
+        else if (playerPointsList[0] > m_Points && playerPointsList[1] < m_Points || playerPointsList[0] == m_Points)
         {
             pointsList[0] = playerPointsList[0];
             pointsList[1] = m_Points;
@@ -124,7 +145,7 @@ public class MainManager : MonoBehaviour
             playList[4] = playerList[3];
             isHighScore = true;
         }
-        else if (playerPointsList[1] > m_Points && playerPointsList[2] < m_Points)
+        else if (playerPointsList[1] > m_Points && playerPointsList[2] < m_Points || playerPointsList[1] == m_Points)
         {
             pointsList[0] = playerPointsList[0];
             pointsList[1] = playerPointsList[1];
@@ -138,7 +159,7 @@ public class MainManager : MonoBehaviour
             playList[4] = playerList[3];
             isHighScore = true;
         }
-        else if (playerPointsList[2] > m_Points && playerPointsList[3] < m_Points)
+        else if (playerPointsList[2] > m_Points && playerPointsList[3] < m_Points || playerPointsList[2] == m_Points)
         {
             pointsList[0] = playerPointsList[0];
             pointsList[1] = playerPointsList[1];
@@ -152,7 +173,7 @@ public class MainManager : MonoBehaviour
             playList[4] = playerList[3];
             isHighScore = true;
         }
-        else if (playerPointsList[3] > m_Points && playerPointsList[4] < m_Points)
+        else if (playerPointsList[3] > m_Points && playerPointsList[4] < m_Points || playerPointsList[3] == m_Points)
         {
             pointsList[0] = playerPointsList[0];
             pointsList[1] = playerPointsList[1];
@@ -236,7 +257,17 @@ public class MainManager : MonoBehaviour
     {
         player = playerName.text;
     }
-  
+    public void LoadLevel(int lvl)
+    {
+        SceneManager.LoadScene(lvl);
+    }
+    public void AdjustSpeed(int amt)
+    {
+        if(throwForce > 2.0f && throwForce < 5.0f)
+        {
+            throwForce += amt;
+        }
+    }
     public void GamePause()
     {
 
