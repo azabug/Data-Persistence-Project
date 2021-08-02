@@ -16,16 +16,28 @@ public class MainManager : MonoBehaviour
     public int hits = 0;
     public int gameLevel = 1;
     public float throwForce = 2.0f;
+    public TextMeshProUGUI throwForceText;
+    public float paddleSize = 1.0f;
+    public GameObject paddle;
+    public GameObject paddleSizeImage;
+    private Vector3 scaleChange;
     public string highScorePlayers;
     public TextMeshProUGUI highscore;
-    public string player;
+    public string player = "Player One";
     public TextMeshProUGUI playerName;
+    public TextMeshProUGUI playerSelectedName;
+    public TextMeshProUGUI prompt;
+    public TextMeshProUGUI prompt2;
     public string[] playerList;
     public int[] playerPointsList;
-    public Button start;
+    public Button enterName;
+    public Button speedPlusButton;
+    public Button speedMinusButton;
+    public Button paddlePlusButton;
+    public Button paddleMinusButton;
     private bool m_Started = false;
     public int m_Points;   
-    private bool m_GameOver = false;
+    //private bool m_GameOver = false;
     public int m_Scene = 0;
     private void Awake()
     {
@@ -43,9 +55,20 @@ public class MainManager : MonoBehaviour
         if (level == 0)
         {
             playerName = GameObject.FindGameObjectWithTag("PlayerNameInput").GetComponent<TextMeshProUGUI>();
+            prompt = GameObject.Find("Prompt").GetComponent<TextMeshProUGUI>();
+            prompt.SetText("Enter a new player name");
+            prompt2 = GameObject.Find("Prompt2").GetComponent<TextMeshProUGUI>();
+            prompt2.SetText("Or keep playing.");
+            playerSelectedName = GameObject.Find("SelectedName").GetComponent<TextMeshProUGUI>();
+            if(player != "" && player != null)
+            {
+                playerSelectedName.text = player.ToString();
+            }
             highscore = GameObject.Find("hscore").GetComponent<TextMeshProUGUI>();
-            start = GameObject.Find("startGameButton").GetComponent<Button>();
-            start.onClick.AddListener(SetPlayerName);
+            enterName = GameObject.Find("InputNameButton").GetComponent<Button>();
+            //playerName.SetText(player.ToString());
+            enterName.onClick.AddListener(SetPlayerName);
+            
             m_Scene = 0;
             m_Points = 0;
             gameLevel = 1;
@@ -54,10 +77,12 @@ public class MainManager : MonoBehaviour
         if(level == 1)
         {
             m_Started = false;
+            hits = 0;
             ballThrow = GameObject.Find("ThrowBall").GetComponent<ThrowBall>();
             brickMan = GameObject.Find("BrickManager").GetComponent<BrickManager>();
             highscore = GameObject.Find("BestScore").GetComponent<TextMeshProUGUI>();
             highscore.SetText("High Score - "+playerList[0]+" : "+playerPointsList[0]);
+            CheckHighestScore(false);
             m_Scene = 1;
         }
         if(level == 2)
@@ -81,16 +106,15 @@ public class MainManager : MonoBehaviour
             }
         }
     }
-    public void CheckHighestScore()
+    public void CheckHighestScore(bool isHit)
     {
-        hits += 1;
+        if (isHit) { hits += 1; }
         if (m_Points > playerPointsList[0])
         {
             highscore.SetText("High Score - "+player+" : "+m_Points);
         }
         if (hits == 36)
         {
-            hits = 0;
             gameLevel += 1;
             SceneManager.LoadScene(1);
         }
@@ -256,16 +280,61 @@ public class MainManager : MonoBehaviour
     public void SetPlayerName()
     {
         player = playerName.text;
+        prompt2.SetText("New player selected.");
+        playerSelectedName.SetText("Player : "+player);
     }
     public void LoadLevel(int lvl)
     {
         SceneManager.LoadScene(lvl);
     }
-    public void AdjustSpeed(int amt)
+    public void OpenSettings()
     {
-        if(throwForce > 2.0f && throwForce < 5.0f)
+        Vector3 imageScale = new Vector3(paddleSize, 1, 1);
+        throwForceText = GameObject.Find("SpeedText").GetComponent<TextMeshProUGUI>();
+        throwForceText.SetText(throwForce.ToString());
+        paddleSizeImage = GameObject.Find("PaddleImg");
+        paddleSizeImage.transform.localScale = imageScale;
+        speedPlusButton = GameObject.Find("SpeedPlusButton").GetComponent<Button>();
+        speedMinusButton = GameObject.Find("SpeedMinusButton").GetComponent<Button>();
+        paddlePlusButton = GameObject.Find("PaddlePlusButton").GetComponent<Button>();
+        paddleMinusButton = GameObject.Find("PaddleMinusButton").GetComponent<Button>();
+        speedPlusButton.onClick.AddListener(AdjustSpeedPlus);
+        speedMinusButton.onClick.AddListener(AdjustSpeedMinus);
+        paddlePlusButton.onClick.AddListener(AdjustPaddleSizePlus);
+        paddleMinusButton.onClick.AddListener(AdjustPaddleSizeMinus);
+    }
+    public void AdjustSpeedPlus()
+    {
+        if(throwForce < 5.0f)
         {
-            throwForce += amt;
+            throwForce += 0.1f;
+            throwForceText.SetText(throwForce.ToString());
+        }
+    }
+    public void AdjustSpeedMinus()
+    {
+        if (throwForce > 2.0f)
+        {
+            throwForce -= 0.1f;
+            throwForceText.SetText(throwForce.ToString());
+        }
+    }
+    public void AdjustPaddleSizePlus()
+    {
+        if (paddleSize < 1.0f)
+        {
+            paddleSize += 0.1f;
+            scaleChange = new Vector3(0.1f, 0.0f, 0.0f);
+            paddleSizeImage.transform.localScale += scaleChange;
+        }
+    }
+    public void AdjustPaddleSizeMinus()
+    {
+        if (paddleSize > 0.4f)
+        {
+            paddleSize -= 0.1f;
+            scaleChange = new Vector3(0.1f, 0.0f, 0.0f);
+            paddleSizeImage.transform.localScale -= scaleChange;
         }
     }
     public void GamePause()
@@ -274,7 +343,9 @@ public class MainManager : MonoBehaviour
     }
     public void GameOver()
     {
-        m_GameOver = true;
+        hits = 0;
+        //m_GameOver = true;
+        m_Started = false;
         SceneManager.LoadScene(2);
     }
 }

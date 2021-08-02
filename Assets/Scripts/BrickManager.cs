@@ -17,7 +17,7 @@ public class BrickManager : MonoBehaviour
     void Start()
     {
         Manager = GameObject.Find("MainManager").GetComponent<MainManager>();
-        ScoreText.text = $"Score : {Manager.m_Points}";
+        ScoreText.text = $"Player : {Manager.player}, " + $"Score : {Manager.m_Points}";
         LevelText.text = $"Level : {Manager.gameLevel}";
         SetUpBricks();
     }
@@ -50,7 +50,7 @@ public class BrickManager : MonoBehaviour
         m_Points = Manager.m_Points;
         m_Points += point;
         Manager.UpdatePoints(m_Points);
-        ScoreText.text = $"Score : {Manager.m_Points}";
+        ScoreText.text = $"Player : {Manager.player}, "+$"Score : {Manager.m_Points}";
         LevelText.text = $"Level : {Manager.gameLevel}";
     }
     public void ShowPrompt()

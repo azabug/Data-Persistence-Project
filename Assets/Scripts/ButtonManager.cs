@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class ButtonManager : MonoBehaviour
 {
     public GameObject settingsPanel;
+    public MainManager mainMan;
 
     public void LoadScene(int scene)
     {
@@ -13,7 +14,9 @@ public class ButtonManager : MonoBehaviour
     //settings//
     public void OpenSettings()
     {
+        mainMan = GameObject.Find("MainManager").GetComponent<MainManager>();
         settingsPanel.SetActive(true);
+        mainMan.OpenSettings();
     }
     public void CloseSettings()
     {
