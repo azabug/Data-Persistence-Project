@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using System.IO;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class MainManager : MonoBehaviour
 {
@@ -347,5 +350,15 @@ public class MainManager : MonoBehaviour
         //m_GameOver = true;
         m_Started = false;
         SceneManager.LoadScene(2);
+    }
+
+    public void Exit()
+    {
+        //MainManager.Instance.SaveColor();
+#if UNITY_EDITOR
+        EditorApplication.ExitPlaymode();
+#else
+        Application.Quit();
+#endif
     }
 }

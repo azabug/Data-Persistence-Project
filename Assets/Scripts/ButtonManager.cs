@@ -22,4 +22,9 @@ public class ButtonManager : MonoBehaviour
     {
         settingsPanel.SetActive(false);
     }
+    public void ExitApp()
+    {
+        mainMan = GameObject.Find("MainManager").GetComponent<MainManager>();
+        mainMan.Exit();
+    }
 }
