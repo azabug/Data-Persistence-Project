@@ -3570,7 +3570,7 @@ MonoBehaviour:
   paddleSizeImage: {fileID: 1072550284}
   highScorePlayers: 
   highscore: {fileID: 1428156430}
-  player: 
+  player: Player One
   playerName: {fileID: 1964767664}
   playerSelectedName: {fileID: 972653822}
   prompt: {fileID: 343756459}
